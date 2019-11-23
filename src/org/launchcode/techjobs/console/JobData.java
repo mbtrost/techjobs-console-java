@@ -7,9 +7,11 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by LaunchCode
@@ -54,7 +56,7 @@ public class JobData {
         return allJobs;
     }
 
-    /**
+    /*
      * Returns results of search the jobs data by key/value, using
      * inclusion of the search term.
      *
@@ -65,19 +67,43 @@ public class JobData {
      * @param value Value of teh field to search for
      * @return List of all jobs matching the criteria
      */
+
+    public static ArrayList<HashMap<String, String>> findByValue (String value) {
+        loadData();
+
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+
+        value = value.toLowerCase();
+
+        for (HashMap<String, String> job : allJobs){
+            for (Map.Entry<String, String> tim : job.entrySet()) {
+                String aValue = tim.getValue().toLowerCase();
+                if (aValue.contains(value) ) {
+                    jobs.add(job);
+                }
+                if (jobs.contains(job)){
+                    break;
+                }
+            }
+        }
+        return jobs;
+    }
+
     public static ArrayList<HashMap<String, String>> findByColumnAndValue(String column, String value) {
 
         // load data, if not already loaded
         loadData();
 
         ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+        value = value.toLowerCase();
 
-        for (HashMap<String, String> row : allJobs) {
+        for (HashMap<String, String> job : allJobs) {
 
-            String aValue = row.get(column);
+            String aValue = job.get(column).toLowerCase();
+
 
             if (aValue.contains(value)) {
-                jobs.add(row);
+                jobs.add(job);
             }
         }
 
